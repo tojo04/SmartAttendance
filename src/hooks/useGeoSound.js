@@ -23,6 +23,7 @@ export const useGeoSound = () => {
    * @returns {Promise<boolean>} Success status
    */
   const generateWave = async () => {
+    console.log('🔥 DEBUG: generateWave function called');
     if (!geoSoundActive) {
       const audioStarted = await audioService.startUltrasonicFrequency();
       if (audioStarted) {
@@ -35,6 +36,7 @@ export const useGeoSound = () => {
         return false;
       }
     }
+    console.log('⚠️ Wave already active, not starting again');
     return false;
   };
 
@@ -42,12 +44,15 @@ export const useGeoSound = () => {
    * Stop geo-sound wave generation
    */
   const stopWave = () => {
+    console.log('🔥 DEBUG: stopWave function called');
     if (geoSoundActive) {
       audioService.stopUltrasonicFrequency();
       setGeoSoundActive(false);
       setGeoSoundStrength(0);
       setDetectedDevices(0);
       console.log('🛑 Wave generation stopped');
+    } else {
+      console.log('⚠️ Wave not active, nothing to stop');
     }
   };
 

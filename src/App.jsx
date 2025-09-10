@@ -68,14 +68,7 @@ const App = () => {
   // Enhanced session handlers
   const handleStartSession = async (classData) => {
     startSession(classData);
-    
-    // Start geo-sound system automatically
-    const waveStarted = await generateWave();
-    if (waveStarted) {
-      console.log('✅ Session started with geo-sound active');
-    } else {
-      console.warn('⚠️ Session started but geo-sound failed to activate');
-    }
+    console.log('✅ Session started - use Generate Wave button to activate geo-sound');
   };
 
   const handleStopSession = () => {

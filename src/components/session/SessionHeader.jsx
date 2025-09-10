@@ -34,7 +34,10 @@ const SessionHeader = ({
         
         <div className="mt-4 lg:mt-0 flex flex-wrap gap-3">
           <button
-            onClick={onGenerateWave}
+            onClick={() => {
+              console.log('🔥 DEBUG: Generate Wave button clicked');
+              onGenerateWave();
+            }}
             disabled={geoSoundActive}
             className={`${
               geoSoundActive 
@@ -47,7 +50,10 @@ const SessionHeader = ({
           </button>
           
           <button
-            onClick={onStopWave}
+            onClick={() => {
+              console.log('🔥 DEBUG: Stop Wave button clicked');
+              onStopWave();
+            }}
             disabled={!geoSoundActive}
             className={`${
               !geoSoundActive 
