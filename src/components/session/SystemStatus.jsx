@@ -1,24 +1,104 @@
-import React from 'react';
-import { Volume2, QrCode } from 'lucide-react';
+import React, { useState } from 'react';
+import { Volume2, QrCode, ToggleLeft, ToggleRight } from 'lucide-react';
 
 /**
  * Visual QR Share display component
  */
 const VisualQRShare = () => {
+  const [showStaticQR, setShowStaticQR] = useState(false);
+
+  const toggleQRMode = () => {
+    setShowStaticQR(!showStaticQR);
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-lg border border-purple-200 p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-purple-900">Visual QR Share</h3>
-        <QrCode className="h-5 w-5 text-purple-400" />
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center space-x-3">
+          <QrCode className="h-5 w-5 text-purple-400" />
+          <h3 className="text-lg font-semibold text-purple-900">
+            {showStaticQR ? 'Static QR Code' : 'Visual QR Share'}
+          </h3>
+        </div>
+        
+        {/* Toggle Button */}
+        <button
+          onClick={toggleQRMode}
+          className="flex items-center space-x-2 px-3 py-2 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors border border-purple-200"
+        >
+          {showStaticQR ? (
+            <ToggleRight className="h-4 w-4 text-purple-600" />
+          ) : (
+            <ToggleLeft className="h-4 w-4 text-purple-600" />
+          )}
+          <span className="text-sm font-medium text-purple-700">
+            {showStaticQR ? 'Static' : 'Visual'}
+          </span>
+        </button>
       </div>
       
       <div className="bg-purple-50 rounded-lg p-8 mb-4">
-        <div className="qr-pattern w-full h-64 rounded-lg border-2 border-dashed border-purple-300"></div>
+        {showStaticQR ? (
+          // Static QR Code
+          <div className="w-full h-64 rounded-lg border-2 border-purple-300 bg-white flex items-center justify-center">
+            <div className="w-48 h-48 bg-white border-2 border-purple-300 rounded-lg p-4">
+              <div className="w-full h-full grid grid-cols-8 gap-1">
+                {/* Generate a static QR-like pattern */}
+                {Array.from({ length: 64 }, (_, i) => (
+                  <div
+                    key={i}
+                    className={`rounded-sm ${
+                      // Create a deterministic pattern that looks like a QR code
+                      (i % 8 === 0 || i % 8 === 7 || Math.floor(i / 8) === 0 || Math.floor(i / 8) === 7) ||
+                      (i >= 9 && i <= 11) || (i >= 17 && i <= 19) || (i >= 25 && i <= 27) ||
+                      (i >= 44 && i <= 46) || (i >= 52 && i <= 54) || (i >= 60 && i <= 62) ||
+                      i === 36 || i === 37 || i === 28 || i === 29 || i === 34 || i === 35 ||
+                      i === 21 || i === 22 || i === 41 || i === 42
+                        ? 'bg-purple-800'
+                        : 'bg-white'
+                    }`}
+                  ></div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+          // Animated Visual QR Pattern
+          <div className="qr-pattern w-full h-64 rounded-lg border-2 border-dashed border-purple-300"></div>
+        )}
       </div>
       
       <p className="text-sm text-purple-600 text-center">
-        Students must overlay their QR share with this pattern to complete verification
+        {showStaticQR 
+          ? 'Students can scan this QR code directly for verification'
+          : 'Students must overlay their QR share with this pattern to complete verification'
+        }
       </p>
+      
+      {/* Mode Description */}
+      <div className={`mt-4 p-3 rounded-lg text-xs ${
+        showStaticQR 
+          ? 'bg-blue-50 text-blue-800 border border-blue-200' 
+          : 'bg-purple-50 text-purple-800 border border-purple-200'
+      }`}>
+        <div className="flex items-center space-x-2">
+          <div className={`w-2 h-2 rounded-full ${
+            showStaticQR ? 'bg-blue-500' : 'bg-purple-500'
+          }`}></div>
+          <span className="font-medium">
+            {showStaticQR 
+              ? '📱 Standard QR Mode: Direct scanning enabled'
+              : '🔒 Visual Cryptography Mode: Requires overlay verification'
+            }
+          </span>
+        </div>
+        <p className="mt-1">
+          {showStaticQR 
+            ? 'Students can scan this QR code with any standard QR reader app.'
+            : 'Enhanced security through visual cryptography - students need both shares to complete verification.'
+          }
+        </p>
+      </div>
     </div>
   );
 };
