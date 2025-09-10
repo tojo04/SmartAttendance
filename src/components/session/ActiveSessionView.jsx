@@ -1,6 +1,6 @@
 import React from 'react';
 import SessionHeader from './SessionHeader';
-import { VisualQRShare, SystemStatus } from './SystemStatus';
+import { VisualQRShare } from './SystemStatus';
 import AttendanceStats from '../common/AttendanceStats';
 import StudentRoster from '../common/StudentRoster';
 import { calculateAttendanceStats } from '../../utils/attendanceUtils';
@@ -38,11 +38,7 @@ const ActiveSessionView = ({
           {/* Visual QR Share Display */}
           <VisualQRShare />
 
-          {/* System Status */}
-          <SystemStatus
-            geoSoundProps={geoSoundProps}
-            onTestGeoSound={onTestGeoSound}
-          />
+          {/* System Status temporarily disabled */}
 
           {/* Live Counters */}
           <AttendanceStats stats={stats} />

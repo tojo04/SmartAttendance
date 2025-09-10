@@ -137,7 +137,7 @@ const VisualQRShare = () => {
       </div>
       
       {/* QR Code Data Display (for development/testing) */}
-      {showStaticQR && qrCodeDataURL && (
+      {/* {showStaticQR && qrCodeDataURL && (
         <div className="mt-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
           <details className="text-xs">
             <summary className="cursor-pointer font-medium text-gray-700 hover:text-gray-900">
@@ -148,7 +148,7 @@ const VisualQRShare = () => {
             </div>
           </details>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
@@ -248,40 +248,8 @@ const GeoSoundStatus = ({
 /**
  * System status panel component
  */
-const SystemStatus = ({ geoSoundProps, onTestGeoSound }) => {
-  const handleTestClick = async () => {
-    const message = await onTestGeoSound();
-    alert(message);
-  };
-
-  return (
-    <div className="bg-white rounded-xl shadow-lg border border-purple-200 p-6">
-      <h3 className="text-lg font-semibold text-purple-900 mb-4">System Status</h3>
-      
-      <div className="space-y-4">
-        {/* Geo-Sound Status */}
-        <GeoSoundStatus {...geoSoundProps} />
-        
-        {/* Visual QR Status */}
-        <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
-          <div className="flex items-center space-x-3">
-            <QrCode className="h-5 w-5 text-purple-600" />
-            <span className="font-medium text-purple-800">Visual QR Ready</span>
-          </div>
-          <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-        </div>
-
-        {/* Test Button */}
-        <button
-          onClick={handleTestClick}
-          className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
-        >
-          Test Geo-Sound System
-        </button>
-      </div>
-    </div>
-  );
-};
+// System Status component temporarily disabled (stub)
+const SystemStatus = () => null;
 
 export { VisualQRShare, GeoSoundStatus, SystemStatus };
 export default SystemStatus;

@@ -8,4 +8,4 @@ export { default as ClassListView } from './class/ClassListView';
 export { default as ActiveSessionView } from './session/ActiveSessionView';
 export { default as SessionHeader } from './session/SessionHeader';
 export { default as SessionSummaryView } from './session/SessionSummaryView';
-export { VisualQRShare, GeoSoundStatus, SystemStatus } from './session/SystemStatus';
+export { VisualQRShare, GeoSoundStatus } from './session/SystemStatus';
