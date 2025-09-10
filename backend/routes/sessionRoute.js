@@ -7,33 +7,14 @@ const router = express.Router();
 router.post('/create', async (req, res) => {
     try {
         const {
-            sessionId,
-            classId,
-            subject,
-            grade,
-            section,
-            studentCount,
-            status = 'active',
-            startTime
+            sessionId
         } = req.body;
 
         // Validate required fields
-        if (!sessionId || !classId || !subject || !grade || !section || !studentCount) {
-            return res.status(400).json({
-                success: false,
-                message: 'All required fields must be provided'
-            });
-        }
+        
 
         const session = new Session({
-            sessionId,
-            classId,
-            subject,
-            grade,
-            section,
-            studentCount,
-            status,
-            startTime: startTime ? new Date(startTime) : new Date()
+            sessionId
         });
         
         await session.save();
