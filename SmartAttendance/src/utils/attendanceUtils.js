@@ -1,3 +1,7 @@
+import axios from 'axios';
+
+const API_BASE_URL = 'http://localhost:5000/api';
+
 /**
  * Format time duration from seconds to MM:SS format
  * @param {number} seconds - Duration in seconds
@@ -26,6 +30,102 @@ export const calculateAttendanceStats = (selectedClass, studentStatuses) => {
   const rate = total > 0 ? Math.round((present / total) * 100) : 0;
   
   return { present, absent, total, rate };
+};
+
+/**
+ * Mark attendance for multiple students by their roll numbers
+ * @param {Array} rollNumbers - Array of roll numbers to mark as present
+ * @param {String} sessionId - Optional session ID, will generate one if not provided
+ * @returns {Object} Result object with success status and details
+ */
+export const markAttendanceByRollNumbers = async (rollNumbers, sessionId = null) => {
+  if (!rollNumbers || rollNumbers.length === 0) {
+    console.log('No roll numbers provided');
+    return { success: false, message: 'No roll numbers provided' };
+  }
+
+  try {
+    const currentSessionId = sessionId || `session_${Date.now()}`;
+    
+    console.log('Marking attendance for roll numbers:', rollNumbers);
+    
+    const results = [];
+    
+    // Mark attendance for each roll number
+    for (const rollNo of rollNumbers) {
+      try {
+        const response = await axios.post(`${API_BASE_URL}/attendance/mark`, {
+          rollNo,
+          sessionId: currentSessionId
+        });
+        results.push({ rollNo, success: true, data: response.data });
+        console.log(`✅ Attendance marked for ${rollNo}`);
+      } catch (error) {
+        console.error(`❌ Error marking attendance for ${rollNo}:`, error.response?.data?.message || error.message);
+        results.push({ 
+          rollNo, 
+          success: false, 
+          error: error.response?.data?.message || 'Error marking attendance' 
+        });
+      }
+    }
+    
+    const successful = results.filter(r => r.success).length;
+    const failed = results.filter(r => !r.success).length;
+    
+    console.log(`📊 Attendance Summary: ${successful} successful, ${failed} failed out of ${rollNumbers.length} total`);
+    
+    return {
+      success: true,
+      results,
+      summary: {
+        total: rollNumbers.length,
+        successful,
+        failed,
+        sessionId: currentSessionId
+      }
+    };
+    
+  } catch (error) {
+    console.error('Error in bulk attendance marking:', error);
+    return { success: false, message: 'Error marking attendance', error: error.message };
+  }
+};
+
+/**
+ * Extract roll numbers from student objects
+ * @param {Array} students - Array of student objects with rollNo property
+ * @returns {Array} Array of roll numbers
+ */
+export const extractRollNumbers = (students) => {
+  if (!students || !Array.isArray(students)) {
+    return [];
+  }
+  return students.map(student => student.rollNo).filter(rollNo => rollNo);
+};
+
+/**
+ * Fetch all attendance records
+ * @returns {Array} Array of attendance records
+ */
+export const fetchAttendanceRecords = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/attendance/all`);
+    return response.data.data || [];
+  } catch (error) {
+    console.error('Error fetching attendance records:', error);
+    return [];
+  }
+};
+
+/**
+ * Simple function to mark all students present from a list
+ * @param {Array} students - Array of student objects
+ * @param {String} sessionId - Optional session ID
+ */
+export const markAllStudentsPresent = async (students, sessionId = null) => {
+  const rollNumbers = extractRollNumbers(students);
+  return await markAttendanceByRollNumbers(rollNumbers, sessionId);
 };
 
 /**

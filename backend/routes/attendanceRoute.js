@@ -7,6 +7,7 @@ const router = express.Router();
 // Mark attendance for a specific session
 router.post('/mark', async (req, res) => {
    const { rollNo, sessionId } = req.body;
+   console.log("Marking attendance for:", JSON.stringify(req.body));
    
    try {
        // Validate required fields
