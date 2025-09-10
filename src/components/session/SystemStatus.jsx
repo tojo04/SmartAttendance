@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import QRCode from 'qrcode';
 import { Volume2, QrCode, ToggleLeft, ToggleRight } from 'lucide-react';
 
 /**
@@ -6,11 +7,45 @@ import { Volume2, QrCode, ToggleLeft, ToggleRight } from 'lucide-react';
  */
 const VisualQRShare = () => {
   const [showStaticQR, setShowStaticQR] = useState(false);
+  const [qrCodeDataURL, setQrCodeDataURL] = useState('');
 
   const toggleQRMode = () => {
     setShowStaticQR(!showStaticQR);
+    
+    // Generate QR code when switching to static mode
+    if (!showStaticQR) {
+      generateQRCode();
+    }
   };
 
+  const generateQRCode = async () => {
+    try {
+      // Create attendance verification data
+      const attendanceData = {
+        sessionId: `session_${Date.now()}`,
+        timestamp: new Date().toISOString(),
+        action: 'mark_attendance',
+        verification: 'qr_scan',
+        classId: 'current_class',
+        teacherId: 'teacher_001'
+      };
+      
+      // Generate QR code with attendance data
+      const qrDataURL = await QRCode.toDataURL(JSON.stringify(attendanceData), {
+        width: 256,
+        margin: 2,
+        color: {
+          dark: '#7c3aed', // Purple color
+          light: '#ffffff'
+        },
+        errorCorrectionLevel: 'M'
+      });
+      
+      setQrCodeDataURL(qrDataURL);
+    } catch (error) {
+      console.error('Error generating QR code:', error);
+    }
+  };
   return (
     <div className="bg-white rounded-xl shadow-lg border border-purple-200 p-6">
       <div className="flex items-center justify-between mb-6">
@@ -40,27 +75,28 @@ const VisualQRShare = () => {
       <div className="bg-purple-50 rounded-lg p-8 mb-4">
         {showStaticQR ? (
           // Static QR Code
-          <div className="w-full h-64 rounded-lg border-2 border-purple-300 bg-white flex items-center justify-center">
-            <div className="w-48 h-48 bg-white border-2 border-purple-300 rounded-lg p-4">
-              <div className="w-full h-full grid grid-cols-8 gap-1">
-                {/* Generate a static QR-like pattern */}
-                {Array.from({ length: 64 }, (_, i) => (
-                  <div
-                    key={i}
-                    className={`rounded-sm ${
-                      // Create a deterministic pattern that looks like a QR code
-                      (i % 8 === 0 || i % 8 === 7 || Math.floor(i / 8) === 0 || Math.floor(i / 8) === 7) ||
-                      (i >= 9 && i <= 11) || (i >= 17 && i <= 19) || (i >= 25 && i <= 27) ||
-                      (i >= 44 && i <= 46) || (i >= 52 && i <= 54) || (i >= 60 && i <= 62) ||
-                      i === 36 || i === 37 || i === 28 || i === 29 || i === 34 || i === 35 ||
-                      i === 21 || i === 22 || i === 41 || i === 42
-                        ? 'bg-purple-800'
-                        : 'bg-white'
-                    }`}
-                  ></div>
-                ))}
+          <div className="w-full h-64 rounded-lg bg-white flex items-center justify-center border-2 border-purple-200">
+            {qrCodeDataURL ? (
+              <div className="text-center">
+                <img 
+                  src={qrCodeDataURL} 
+                  alt="Attendance QR Code" 
+                  className="w-48 h-48 mx-auto rounded-lg shadow-lg border-2 border-purple-300"
+                />
+                <p className="mt-2 text-xs text-purple-600 font-medium">
+                  Session QR Code
+                </p>
               </div>
-            </div>
+            ) : (
+              <div className="text-center">
+                <div className="w-48 h-48 bg-purple-100 rounded-lg flex items-center justify-center border-2 border-purple-300">
+                  <div className="text-purple-600">
+                    <QrCode className="h-12 w-12 mx-auto mb-2" />
+                    <p className="text-sm">Generating QR Code...</p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         ) : (
           // Animated Visual QR Pattern
@@ -70,7 +106,7 @@ const VisualQRShare = () => {
       
       <p className="text-sm text-purple-600 text-center">
         {showStaticQR 
-          ? 'Students can scan this QR code directly for verification'
+          ? 'Students can scan this QR code with their mobile phones for attendance verification'
           : 'Students must overlay their QR share with this pattern to complete verification'
         }
       </p>
@@ -94,11 +130,25 @@ const VisualQRShare = () => {
         </div>
         <p className="mt-1">
           {showStaticQR 
-            ? 'Students can scan this QR code with any standard QR reader app.'
+            ? 'Students can scan this QR code with any standard QR reader app or camera app to mark their attendance.'
             : 'Enhanced security through visual cryptography - students need both shares to complete verification.'
           }
         </p>
       </div>
+      
+      {/* QR Code Data Display (for development/testing) */}
+      {showStaticQR && qrCodeDataURL && (
+        <div className="mt-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+          <details className="text-xs">
+            <summary className="cursor-pointer font-medium text-gray-700 hover:text-gray-900">
+              QR Code Data (Click to expand)
+            </summary>
+            <div className="mt-2 p-2 bg-white rounded border font-mono text-xs text-gray-600 break-all">
+              {qrCodeDataURL && JSON.stringify(JSON.parse(atob(qrCodeDataURL.split(',')[1]).split('').map(c => String.fromCharCode(c.charCodeAt(0))).join('').match(/"text":"([^"]+)"/)?.[1] || '{}'), null, 2)}
+            </div>
+          </details>
+        </div>
+      )}
     </div>
   );
 };
