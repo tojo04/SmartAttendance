@@ -21,7 +21,7 @@ const StudentRoster = ({ students, studentStatuses }) => {
         <p className="text-sm text-purple-600 mt-1">Real-time attendance status</p>
       </div>
       
-      <div className="max-h-96 overflow-y-auto">
+      <div className="max-h-96 overflow-y-auto student-roster-scroll">
         <div className="divide-y divide-purple-100">
           {students.map((student) => {
             const status = studentStatuses[student.id] || 'pending';

@@ -32,7 +32,7 @@ const ActiveSessionView = ({
         onStopSession={onStopSession}
       />
 
-      <div className="grid lg:grid-cols-2 gap-8">
+      <div className="grid lg:grid-cols-2 gap-8 items-start">
         {/* Left Column: QR Share and System Status */}
         <div className="space-y-6">
           {/* Visual QR Share Display */}
