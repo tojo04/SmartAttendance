@@ -150,7 +150,7 @@ const StudentRoster = ({ students, studentStatuses, onAttendanceMarked }) => {
             <h3 className="text-lg font-semibold text-purple-900">Live Student Roster</h3>
             <p className="text-sm text-purple-600 mt-1">Real-time attendance status</p>
           </div>
-          <button
+          {/* <button
             onClick={markAllPresentStudents}
             disabled={isMarkingAttendance}
             className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-colors ${
@@ -163,7 +163,7 @@ const StudentRoster = ({ students, studentStatuses, onAttendanceMarked }) => {
             <span>
               {isMarkingAttendance ? 'Marking...' : 'Mark All Present'}
             </span>
-          </button>
+          </button> */}
         </div>
       </div>
       
