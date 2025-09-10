@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer components {
+  .qr-pattern {
+    background-image: 
+      radial-gradient(circle at 20% 20%, #000 2px, transparent 2px),
+      radial-gradient(circle at 80% 20%, #000 2px, transparent 2px),
+      radial-gradient(circle at 40% 40%, #000 2px, transparent 2px),
+      radial-gradient(circle at 60% 60%, #000 2px, transparent 2px),
+      radial-gradient(circle at 20% 80%, #000 2px, transparent 2px),
+      radial-gradient(circle at 80% 80%, #000 2px, transparent 2px);
+    background-size: 20px 20px, 25px 25px, 15px 15px, 30px 30px, 18px 18px, 22px 22px;
+    animation: qr-shift 4s ease-in-out infinite;
+  }
+  
+  @keyframes qr-shift {
+    0%, 100% { 
+      background-position: 0% 0%, 100% 0%, 50% 50%, 0% 100%, 100% 100%, 25% 75%; 
+    }
+    50% { 
+      background-position: 10% 10%, 90% 10%, 40% 60%, 10% 90%, 90% 90%, 35% 65%; 
+    }
+  }
+}
